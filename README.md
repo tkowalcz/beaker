@@ -4,7 +4,8 @@
 
 # NUMA
 Verified thread assignment using `htop`. Verified memory assignment using `numastat <PID>`.
-Output from x1.32xlarge instance (128 CPUs, 2TB RAM):
+
+Output from x1.32xlarge instance (128 CPUs, 2TB RAM) running on `openjdk version "11.0.1" 2018-10-16`.
 
 ```
 NUMA topology
@@ -33,7 +34,7 @@ Distance (3,0): 20
 Distance (3,1): 20
 Distance (3,2): 20
 Distance (3,3): 10
-`
+```
 
 ```
 Benchmark                              (dataNumaNode)  (dataSizeMegabytes)  (threadNumaNode)   Mode  Cnt  Score   Error   Units
@@ -53,6 +54,6 @@ NUMAMicrobenchmark.traverseByteBuffer               3                  100      
 NUMAMicrobenchmark.traverseByteBuffer               3                  100                 1  thrpt       0.076          ops/ms
 NUMAMicrobenchmark.traverseByteBuffer               3                  100                 2  thrpt       0.075          ops/ms
 NUMAMicrobenchmark.traverseByteBuffer               3                  100                 3  thrpt       0.122          ops/ms
-`
+```
 
 ![Beaker](https://vignette.wikia.nocookie.net/muppet/images/0/05/Beaker.jpg/revision/latest?cb=20101015151246)
