@@ -37,23 +37,39 @@ Distance (3,3): 10
 ```
 
 ```
-Benchmark                              (dataNumaNode)  (dataSizeMegabytes)  (threadNumaNode)   Mode  Cnt  Score   Error   Units
-NUMAMicrobenchmark.traverseByteBuffer               0                  100                 0  thrpt       0.128          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               0                  100                 1  thrpt       0.078          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               0                  100                 2  thrpt       0.076          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               0                  100                 3  thrpt       0.077          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               1                  100                 0  thrpt       0.075          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               1                  100                 1  thrpt       0.132          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               1                  100                 2  thrpt       0.078          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               1                  100                 3  thrpt       0.075          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               2                  100                 0  thrpt       0.076          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               2                  100                 1  thrpt       0.076          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               2                  100                 2  thrpt       0.128          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               2                  100                 3  thrpt       0.076          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               3                  100                 0  thrpt       0.074          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               3                  100                 1  thrpt       0.076          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               3                  100                 2  thrpt       0.075          ops/ms
-NUMAMicrobenchmark.traverseByteBuffer               3                  100                 3  thrpt       0.122          ops/ms
+Benchmark                                              (dataNumaNode)  (dataSizeMegabytes)  (threadNumaNode)   Mode  Cnt         Score   Error   Units
+NUMAMicrobenchmark.traverseByteBuffer                               0                  100                 0  thrpt              0.129          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               0                  100                 0  thrpt       13294664.253          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               0                  100                 1  thrpt              0.075          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               0                  100                 1  thrpt        7892870.810          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               0                  100                 2  thrpt              0.076          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               0                  100                 2  thrpt        7965735.518          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               0                  100                 3  thrpt              0.074          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               0                  100                 3  thrpt        7580413.572          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               1                  100                 0  thrpt              0.075          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               1                  100                 0  thrpt        7895685.593          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               1                  100                 1  thrpt              0.127          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               1                  100                 1  thrpt       13353148.173          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               1                  100                 2  thrpt              0.077          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               1                  100                 2  thrpt        8051246.387          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               1                  100                 3  thrpt              0.070          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               1                  100                 3  thrpt        7451326.321          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               2                  100                 0  thrpt              0.075          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               2                  100                 0  thrpt        7836982.561          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               2                  100                 1  thrpt              0.076          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               2                  100                 1  thrpt        8019348.980          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               2                  100                 2  thrpt              0.127          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               2                  100                 2  thrpt       13397067.832          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               2                  100                 3  thrpt              0.074          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               2                  100                 3  thrpt        7805468.604          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               3                  100                 0  thrpt              0.073          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               3                  100                 0  thrpt        7686027.807          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               3                  100                 1  thrpt              0.075          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               3                  100                 1  thrpt        7867699.669          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               3                  100                 2  thrpt              0.076          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               3                  100                 2  thrpt        8030222.041          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer                               3                  100                 3  thrpt              0.128          ops/ms
+NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               3                  100                 3  thrpt       13335603.824          ops/ms
 ```
 
 ![Beaker](https://vignette.wikia.nocookie.net/muppet/images/0/05/Beaker.jpg/revision/latest?cb=20101015151246)
