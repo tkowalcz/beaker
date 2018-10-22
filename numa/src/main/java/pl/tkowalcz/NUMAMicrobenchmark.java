@@ -20,9 +20,11 @@ public class NUMAMicrobenchmark {
 
     private final Random random = new Random(0);
 
+    // Discovered on startup and filled with list of all numa nodes
     @Param("0")
     int threadNumaNode;
 
+    // Discovered on startup and filled with list of all numa nodes
     @Param("0")
     int dataNumaNode;
 
