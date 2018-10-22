@@ -9,6 +9,7 @@ import xerial.jnuma.Numa;
 
 import java.nio.ByteBuffer;
 import java.util.BitSet;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
@@ -16,6 +17,8 @@ import java.util.stream.IntStream;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 public class NUMAMicrobenchmark {
+
+    private final Random random = new Random(0);
 
     @Param("0")
     int threadNumaNode;
@@ -60,16 +63,61 @@ public class NUMAMicrobenchmark {
     }
 
     @Benchmark
-    public int traverseByteBuffer(Throughput throughput) {
+    public int readByteBufferInOrder(Throughput throughput) {
         Numa.runOnNode(threadNumaNode);
 
         int result = 0;
-        for (int j = 0; j < byteBuffer.limit(); j += 8) {
-            result += byteBuffer.getLong(j);
+        for (int i = 0; i < byteBuffer.limit(); i += 8) {
+            result += byteBuffer.getLong(i);
         }
 
         throughput.increment(byteBuffer.remaining());
         return result;
+    }
+
+    @Benchmark
+    public int readByteBufferRandomly(Throughput throughput) {
+        Numa.runOnNode(threadNumaNode);
+
+        int result = 0;
+        int limitBytes = byteBuffer.limit();
+        int limitElements = limitBytes / 8;
+
+        for (int i = 0; i < limitBytes; i += 8) {
+            int index = random.nextInt(limitElements);
+            result += byteBuffer.getLong(index * 8);
+        }
+
+        throughput.increment(byteBuffer.remaining());
+        return result;
+    }
+
+    // TODO: verify that this does not get optimised away
+    @Benchmark
+    public void writeByteBufferInOrder(Throughput throughput) {
+        Numa.runOnNode(threadNumaNode);
+
+        for (int i = 0; i < byteBuffer.limit(); i += 8) {
+            byteBuffer.putLong(i, 0xABCDEF_ABCDEFL);
+        }
+
+        throughput.increment(byteBuffer.remaining());
+    }
+
+    // TODO: verify that this does not get optimised away
+    @Benchmark
+    public void writeByteBufferRandomly(Throughput throughput) {
+        Numa.runOnNode(threadNumaNode);
+
+        int limitBytes = byteBuffer.limit();
+        int limitElements = limitBytes / 8;
+
+        for (int i = 0; i < limitBytes; i += 8) {
+            int index = random.nextInt(limitElements);
+            byteBuffer.putLong(index * 8, 0xABCDEF_ABCDEFL);
+        }
+
+        throughput.increment(byteBuffer.remaining());
     }
 
     public static void main(String[] args) throws RunnerException {
