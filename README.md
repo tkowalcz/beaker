@@ -74,7 +74,7 @@ NUMAMicrobenchmark.traverseByteBuffer                               3           
 NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               3                  100                 3  thrpt       13335603.824          ops/ms
 ```
 
-## AMD Epyc
+## AMD Epyc 7571
 
 Output from m5a.24xlarge instance (96 CPUs, 360GB RAM) running on `openjdk version "12-testing" 2019-03-19` from https://builds.shipilev.net/openjdk-panama/.
 
@@ -129,7 +129,10 @@ Distance (5,2): 32
 Distance (5,3): 16
 Distance (5,4): 16
 Distance (5,5): 10
+```
 
+
+```
 Benchmark                                                      (dataNumaNode)  (dataSizeMegabytes)  (threadNumaNode)   Mode  Cnt      Score   Error  Units
 NUMAMicrobenchmark.readByteBufferInOrder                                    0                  100                 0  thrpt         290.813          ops/s
 NUMAMicrobenchmark.readByteBufferInOrder:throughputMegabytes                0                  100                 0  thrpt       28271.586          ops/s
