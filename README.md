@@ -5,7 +5,7 @@
 # NUMA
 Verified thread assignment using `htop`. Verified memory assignment using `numastat <PID>`.
 
-## Intel Platinum
+## Intel Platinum x1.32xlarge
 
 Output from x1.32xlarge instance (128 CPUs, 2TB RAM) running on `openjdk version "11.0.1" 2018-10-16`.
 
@@ -74,7 +74,7 @@ NUMAMicrobenchmark.traverseByteBuffer                               3           
 NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               3                  100                 3  thrpt       13335603.824          ops/ms
 ```
 
-## AMD Epyc 7571
+## AMD Epyc 7571 m5a.24xlarge
 
 Output from m5a.24xlarge instance (96 CPUs, 360GB RAM) running on `openjdk version "12-testing" 2019-03-19` from https://builds.shipilev.net/openjdk-panama/.
 
@@ -278,5 +278,41 @@ NUMAMicrobenchmark.readByteBufferRandomly                                   5   
 NUMAMicrobenchmark.readByteBufferRandomly:throughputMegabytes               5                  100                 4  thrpt         272.698          ops/s
 NUMAMicrobenchmark.readByteBufferRandomly                                   5                  100                 5  thrpt           3.995          ops/s
 NUMAMicrobenchmark.readByteBufferRandomly:throughputMegabytes               5                  100                 5  thrpt         399.532          ops/s
+```
+
+## Intel Platinum
+
+```
+NUMA topology
+nodes: 2
+node 0 size = 189286mb
+{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71}
+node 1 size = 189368mb
+{24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95}
+Distance (0,0): 10
+Distance (0,1): 20
+Distance (1,0): 20
+Distance (1,1): 10
+```
+
+
+```
+Benchmark                                                      (dataNumaNode)  (dataSizeMegabytes)  (threadNumaNode)   Mode  Cnt      Score   Error  Units
+NUMAMicrobenchmark.readByteBufferInOrder                                    0                  100                 0  thrpt         219.981          ops/s
+NUMAMicrobenchmark.readByteBufferInOrder:throughputMegabytes                0                  100                 0  thrpt       22018.070          ops/s
+NUMAMicrobenchmark.readByteBufferInOrder                                    0                  100                 1  thrpt         120.670          ops/s
+NUMAMicrobenchmark.readByteBufferInOrder:throughputMegabytes                0                  100                 1  thrpt       12286.937          ops/s
+NUMAMicrobenchmark.readByteBufferInOrder                                    1                  100                 0  thrpt         131.104          ops/s
+NUMAMicrobenchmark.readByteBufferInOrder:throughputMegabytes                1                  100                 0  thrpt       13005.485          ops/s
+NUMAMicrobenchmark.readByteBufferInOrder                                    1                  100                 1  thrpt         220.392          ops/s
+NUMAMicrobenchmark.readByteBufferInOrder:throughputMegabytes                1                  100                 1  thrpt       21569.177          ops/s
+NUMAMicrobenchmark.readByteBufferRandomly                                   0                  100                 0  thrpt           3.102          ops/s
+NUMAMicrobenchmark.readByteBufferRandomly:throughputMegabytes               0                  100                 0  thrpt         315.058          ops/s
+NUMAMicrobenchmark.readByteBufferRandomly                                   0                  100                 1  thrpt           2.184          ops/s
+NUMAMicrobenchmark.readByteBufferRandomly:throughputMegabytes               0                  100                 1  thrpt         223.356          ops/s
+NUMAMicrobenchmark.readByteBufferRandomly                                   1                  100                 0  thrpt           2.156          ops/s
+NUMAMicrobenchmark.readByteBufferRandomly:throughputMegabytes               1                  100                 0  thrpt         215.584          ops/s
+NUMAMicrobenchmark.readByteBufferRandomly                                   1                  100                 1  thrpt           3.295          ops/s
+NUMAMicrobenchmark.readByteBufferRandomly:throughputMegabytes               1                  100                 1  thrpt         334.463          ops/s
 ```
 ![Beaker](https://vignette.wikia.nocookie.net/muppet/images/0/05/Beaker.jpg/revision/latest?cb=20101015151246)
