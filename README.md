@@ -5,7 +5,9 @@
 # NUMA
 Verified thread assignment using `htop`. Verified memory assignment using `numastat <PID>`.
 
-## Output from x1.32xlarge instance (128 CPUs, 2TB RAM) running on `openjdk version "11.0.1" 2018-10-16`.
+## Intel Platinum
+
+Output from x1.32xlarge instance (128 CPUs, 2TB RAM) running on `openjdk version "11.0.1" 2018-10-16`.
 
 ```
 NUMA topology
@@ -72,7 +74,9 @@ NUMAMicrobenchmark.traverseByteBuffer                               3           
 NUMAMicrobenchmark.traverseByteBuffer:throughputBytes               3                  100                 3  thrpt       13335603.824          ops/ms
 ```
 
-## Output from m5a.24xlarge instance (96 CPUs, 360GB RAM) running on `openjdk version "12-testing" 2019-03-19` from https://builds.shipilev.net/openjdk-panama/.
+## AMD Epyc
+
+Output from m5a.24xlarge instance (96 CPUs, 360GB RAM) running on `openjdk version "12-testing" 2019-03-19` from https://builds.shipilev.net/openjdk-panama/.
 
 ```
 NUMA topology
