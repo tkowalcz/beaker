@@ -32,6 +32,7 @@ package pl.tkowalcz;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Control;
+import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
@@ -54,21 +55,34 @@ import java.util.stream.IntStream;
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class AllCorePingPongMicrobenchmark {
 
-    public final ByteBuffer byteBuffer = Numa.allocOnNode(1024, 0);
-    public final VarHandle handle = MethodHandles.byteBufferViewVarHandle(int[].class, ByteOrder.nativeOrder());
-
     @State(Scope.Benchmark)
     public static class CoreSequence {
 
         @Param("0,0")
         public String coresConfigurations;
 
-        public List<Integer> cores;
+        List<Integer> cores;
+        Core2CoreDescriptor core2CoreDescriptor;
 
         @Setup
         public void setUp() {
-            cores = Core2CoreDescriptor.fromString(coresConfigurations).toSynchronizedList();
+            core2CoreDescriptor = Core2CoreDescriptor.fromString(coresConfigurations);
+            cores = core2CoreDescriptor.toSynchronizedList();
+
             System.out.println("Will test following cores configuration: " + cores);
+        }
+    }
+
+    @State(Scope.Group)
+    public static class GroupState {
+
+        public final VarHandle handle = MethodHandles.byteBufferViewVarHandle(int[].class, ByteOrder.nativeOrder());
+
+        public ByteBuffer byteBuffer;
+
+        @Setup
+        public void setUp(CoreSequence coreSequence) {
+            byteBuffer = Numa.allocOnNode(1024, coreSequence.core2CoreDescriptor.getCore1());
         }
     }
 
@@ -86,16 +100,16 @@ public class AllCorePingPongMicrobenchmark {
 
     @Benchmark
     @Group("pingpong")
-    public void ping(Control cnt, CoreAssigner coreAssigner) {
-        while (!cnt.stopMeasurement && !handle.compareAndSet(byteBuffer, 0, 0, 1)) {
+    public void ping(Control cnt, GroupState groupState, CoreAssigner coreAssigner) {
+        while (!cnt.stopMeasurement && !groupState.handle.compareAndSet(groupState.byteBuffer, 0, 0, 1)) {
             // this body is intentionally left blank
         }
     }
 
     @Benchmark
     @Group("pingpong")
-    public void pong(Control cnt, CoreAssigner coreAssigner) {
-        while (!cnt.stopMeasurement && !handle.compareAndSet(byteBuffer, 0, 1, 0)) {
+    public void pong(Control cnt, GroupState groupState, CoreAssigner coreAssigner) {
+        while (!cnt.stopMeasurement && !groupState.handle.compareAndSet(groupState.byteBuffer, 0, 1, 0)) {
             // this body is intentionally left blank
         }
     }
@@ -115,6 +129,11 @@ public class AllCorePingPongMicrobenchmark {
                 .warmupIterations(1)
                 .measurementIterations(1)
                 .param("coresConfigurations", coresConfigurations)
+//                .jvmArgs(
+//                        "-XX:+UnlockExperimentalVMOptions",
+//                        "-XX:+UseEpsilonGC"
+//                )
+                .resultFormat(ResultFormatType.CSV)
                 .threads(2)
                 .forks(1)
                 .build();
@@ -131,6 +150,14 @@ class Core2CoreDescriptor {
     public Core2CoreDescriptor(int core1, int core2) {
         this.core1 = core1;
         this.core2 = core2;
+    }
+
+    public int getCore1() {
+        return core1;
+    }
+
+    public int getCore2() {
+        return core2;
     }
 
     @Override
