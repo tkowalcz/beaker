@@ -46,6 +46,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 
+@State(Scope.Group)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class AllCorePingPongMicrobenchmark {
@@ -74,7 +75,7 @@ public class AllCorePingPongMicrobenchmark {
         public void setUp(CoreSequence coreSequence) {
             Integer core = coreSequence.cores.remove(0);
 
-            Numa.setAffinity(core);
+            Numa.runOnNode(core);
             System.out.println("Running on node: " + core);
         }
     }
@@ -96,9 +97,9 @@ public class AllCorePingPongMicrobenchmark {
     }
 
     public static void main(String[] args) throws RunnerException {
-        String[] coresConfigurations = IntStream.range(0, Numa.numCPUs())
+        String[] coresConfigurations = IntStream.range(0, Numa.numNodes())
                 .boxed()
-                .flatMap(i -> IntStream.range(0, Numa.numCPUs())
+                .flatMap(i -> IntStream.range(0, Numa.numNodes())
                         .mapToObj(__ -> new Core2CoreDescriptor(__, i)))
                 .map(Core2CoreDescriptor::toString)
                 .toArray(String[]::new);
