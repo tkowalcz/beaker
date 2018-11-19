@@ -38,12 +38,15 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import xerial.jnuma.Numa;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 
 @State(Scope.Group)
@@ -51,7 +54,8 @@ import java.util.stream.IntStream;
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class AllCorePingPongMicrobenchmark {
 
-    public final AtomicBoolean flag = new AtomicBoolean();
+    public final ByteBuffer byteBuffer = Numa.allocOnNode(1024, 0);
+    public final VarHandle handle = MethodHandles.byteBufferViewVarHandle(int[].class, ByteOrder.nativeOrder());
 
     @State(Scope.Benchmark)
     public static class CoreSequence {
@@ -83,7 +87,7 @@ public class AllCorePingPongMicrobenchmark {
     @Benchmark
     @Group("pingpong")
     public void ping(Control cnt, CoreAssigner coreAssigner) {
-        while (!cnt.stopMeasurement && !flag.compareAndSet(false, true)) {
+        while (!cnt.stopMeasurement && !handle.compareAndSet(byteBuffer, 0, 0, 1)) {
             // this body is intentionally left blank
         }
     }
@@ -91,7 +95,7 @@ public class AllCorePingPongMicrobenchmark {
     @Benchmark
     @Group("pingpong")
     public void pong(Control cnt, CoreAssigner coreAssigner) {
-        while (!cnt.stopMeasurement && !flag.compareAndSet(true, false)) {
+        while (!cnt.stopMeasurement && !handle.compareAndSet(byteBuffer, 0, 1, 0)) {
             // this body is intentionally left blank
         }
     }
