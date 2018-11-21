@@ -107,7 +107,7 @@ public class AllCorePingPongMicrobenchmark {
                 .resultFormat(ResultFormatType.CSV)
 //                .addProfiler(LinuxPerfAsmProfiler.class)
                 .threads(2)
-                .forks(0)
+                .forks(1)
                 .build();
 
         new Runner(opt).run();
