@@ -1,6 +1,5 @@
 package pl.tkowalcz;
 
-import org.agrona.BufferUtil;
 import org.agrona.UnsafeAccess;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Control;
@@ -19,6 +18,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
+
+import static org.agrona.BitUtil.isPowerOfTwo;
+import static org.agrona.BufferUtil.address;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -51,8 +53,7 @@ public class AllCorePingPongMicrobenchmark {
 
         @Setup
         public void setUp(CoreSequence coreSequence) {
-            ByteBuffer byteBuffer = Numa.allocOnNode(1024, coreSequence.core2CoreDescriptor.getCore1());
-            flagAddress = BufferUtil.address(byteBuffer);
+            flagAddress = allocateAligned(4096, 1024, coreSequence.core2CoreDescriptor.getCore1());
         }
     }
 
@@ -106,10 +107,30 @@ public class AllCorePingPongMicrobenchmark {
                 .resultFormat(ResultFormatType.CSV)
 //                .addProfiler(LinuxPerfAsmProfiler.class)
                 .threads(2)
-                .forks(1)
+                .forks(0)
                 .build();
 
         new Runner(opt).run();
+    }
+
+    // Based on org.agrona.BufferUtil::allocateDirectAligned
+    public static long allocateAligned(final int capacity, final int alignment, final int node) {
+        if (!isPowerOfTwo(alignment)) {
+            throw new IllegalArgumentException("Must be a power of 2: alignment=" + alignment);
+        }
+
+        ByteBuffer buffer;
+        if (Numa.isAvailable()) {
+            buffer = Numa.allocOnNode(capacity + alignment, node);
+        } else {
+            buffer = ByteBuffer.allocateDirect(capacity + alignment);
+        }
+
+        final long address = address(buffer);
+        final int remainder = (int) (address & (alignment - 1));
+        final int offset = alignment - remainder;
+
+        return address + offset;
     }
 }
 
