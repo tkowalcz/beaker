@@ -86,7 +86,7 @@ public class NUMAMicrobenchmark {
 
         int result = 0;
         for (int i = 0; i < byteBuffer.limit(); i += 8) {
-            result += byteBuffer.getLong(i & 0x3eE800);
+            result += byteBuffer.getLong(i);
         }
 
         throughput.increment(byteBuffer.remaining());
@@ -172,7 +172,7 @@ public class NUMAMicrobenchmark {
         }
 
         Options opt = new OptionsBuilder()
-                .include(".*" + NUMAMicrobenchmark.class.getSimpleName() + ".*")
+                .include(".*" + NUMAMicrobenchmark.class.getSimpleName() + ".readByteBufferInOrder")
                 .warmupIterations(1)
                 .measurementIterations(1)
                 .addProfiler(profilerClass)
