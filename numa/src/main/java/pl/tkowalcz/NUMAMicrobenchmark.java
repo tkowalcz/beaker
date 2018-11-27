@@ -1,6 +1,11 @@
 package pl.tkowalcz;
 
+import org.agrona.SystemUtil;
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.profile.DTraceAsmProfiler;
+import org.openjdk.jmh.profile.LinuxPerfAsmProfiler;
+import org.openjdk.jmh.profile.Profiler;
+import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
@@ -8,14 +13,23 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import xerial.jnuma.Numa;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 @BenchmarkMode(Mode.Throughput)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
+@Fork(value = 1, jvmArgsPrepend = {
+//        "-XX:+UnlockDiagnosticVMOptions",
+//        "-XX:+PrintCompilation",
+        /*"-XX:PrintAssemblyOptions=intel",*/
+        "-XX:+UnlockExperimentalVMOptions",
+        "-XX:+UseEpsilonGC",
+}
+)
 public class NUMAMicrobenchmark {
 
     private final Random random = new Random(0);
@@ -32,6 +46,7 @@ public class NUMAMicrobenchmark {
     int dataSizeMegabytes;
 
     private ByteBuffer byteBuffer;
+    int[] indices;
 
     @State(Scope.Thread)
     @AuxCounters(AuxCounters.Type.OPERATIONS)
@@ -39,8 +54,8 @@ public class NUMAMicrobenchmark {
 
         private long bytesProcessed;
 
-        public long throughputBytes() {
-            return bytesProcessed;
+        public long throughputGigabytes() {
+            return bytesProcessed / (1024 * 1024 * 1024);
         }
 
         void increment(int remaining) {
@@ -57,6 +72,7 @@ public class NUMAMicrobenchmark {
         }
 
         byteBuffer.flip();
+        indices = new int[byteBuffer.limit() / 8];
     }
 
     @TearDown
@@ -70,7 +86,7 @@ public class NUMAMicrobenchmark {
 
         int result = 0;
         for (int i = 0; i < byteBuffer.limit(); i += 8) {
-            result += byteBuffer.getLong(i);
+            result += byteBuffer.getLong(i & 0x3eE800);
         }
 
         throughput.increment(byteBuffer.remaining());
@@ -79,6 +95,29 @@ public class NUMAMicrobenchmark {
 
     @Benchmark
     public int readByteBufferRandomly(Throughput throughput) {
+        Numa.runOnNode(threadNumaNode);
+
+        int result = 0;
+        int limitBytes = byteBuffer.limit();
+        int limitElements = limitBytes / 8;
+
+        for (int i = 0; i < indices.length / 8; i++) {
+            indices[i] = random.nextInt(limitElements);
+        }
+
+        Arrays.sort(indices);
+
+        for (int i = 0; i < limitBytes; i += 8) {
+            int index = indices[i / 8];
+            result += byteBuffer.getLong(index * 8);
+        }
+
+        throughput.increment(byteBuffer.remaining());
+        return result;
+    }
+
+    @Benchmark
+    public int readByteBufferRandomlyWithDataDependency(Throughput throughput) {
         Numa.runOnNode(threadNumaNode);
 
         int result = 0;
@@ -127,13 +166,19 @@ public class NUMAMicrobenchmark {
 
         printNumaSettings();
 
+        Class<? extends Profiler> profilerClass = LinuxPerfAsmProfiler.class;
+        if (SystemUtil.osName().toLowerCase().startsWith("mac os")) {
+            profilerClass = DTraceAsmProfiler.class;
+        }
+
         Options opt = new OptionsBuilder()
                 .include(".*" + NUMAMicrobenchmark.class.getSimpleName() + ".*")
                 .warmupIterations(1)
                 .measurementIterations(1)
-                .jvmArgs("-XX:+UnlockExperimentalVMOptions", "-XX:+UseEpsilonGC")
+                .addProfiler(profilerClass)
                 .param("threadNumaNode", range(0, Numa.numNodes()))
                 .param("dataNumaNode", range(0, Numa.numNodes()))
+                .resultFormat(ResultFormatType.CSV)
                 .forks(1)
                 .build();
 
