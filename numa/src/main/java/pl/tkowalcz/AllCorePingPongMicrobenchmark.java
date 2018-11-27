@@ -1,8 +1,12 @@
 package pl.tkowalcz;
 
+import org.agrona.SystemUtil;
 import org.agrona.UnsafeAccess;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Control;
+import org.openjdk.jmh.profile.DTraceAsmProfiler;
+import org.openjdk.jmh.profile.LinuxPerfAsmProfiler;
+import org.openjdk.jmh.profile.Profiler;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -93,6 +97,11 @@ public class AllCorePingPongMicrobenchmark {
                 .map(Core2CoreDescriptor::toString)
                 .toArray(String[]::new);
 
+        Class<? extends Profiler> profilerClass = LinuxPerfAsmProfiler.class;
+        if (SystemUtil.osName().toLowerCase().startsWith("mac os")) {
+            profilerClass = DTraceAsmProfiler.class;
+        }
+
         System.out.println("Will test following cores configurations: " + Arrays.toString(coresConfigurations));
 
         Options opt = new OptionsBuilder()
@@ -105,7 +114,7 @@ public class AllCorePingPongMicrobenchmark {
                         "-XX:+UseEpsilonGC"
                 )
                 .resultFormat(ResultFormatType.CSV)
-//                .addProfiler(LinuxPerfAsmProfiler.class)
+                .addProfiler(profilerClass)
                 .threads(2)
                 .forks(1)
                 .build();
