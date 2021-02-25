@@ -1,4 +1,4 @@
-package pl.tkowalcz.tcph;
+package pl.tkowalcz.tpch;
 
 public interface Identifiable {
 

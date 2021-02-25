@@ -1,8 +1,8 @@
-package pl.tkowalcz.tcph.datamodel;
+package pl.tkowalcz.tpch.datamodel;
 
 //import org.apache.calcite.sql.*;
 import org.apache.commons.lang3.tuple.Pair;
-import pl.tkowalcz.tcph.Database;
+import pl.tkowalcz.tpch.Database;
 
 import java.io.PrintStream;
 

@@ -1,6 +1,6 @@
-package pl.tkowalcz.tcph;
+package pl.tkowalcz.tpch;
 
-import pl.tkowalcz.tcph.datamodel.LineItem;
+import pl.tkowalcz.tpch.datamodel.LineItem;
 
 public class ProcessingItem implements Identifiable {
 

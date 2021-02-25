@@ -1,4 +1,4 @@
-package pl.tkowalcz.tcph;
+package pl.tkowalcz.tpch;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.profile.GCProfiler;

@@ -1,4 +1,4 @@
-package pl.tkowalcz.tcph.datamodel;
+package pl.tkowalcz.tpch.datamodel;
 
 //import org.apache.calcite.linq4j.Ord;
 //import org.apache.calcite.sql.SqlBasicCall;
@@ -6,7 +6,7 @@ package pl.tkowalcz.tcph.datamodel;
 //import org.apache.calcite.sql.SqlDateLiteral;
 //import org.apache.calcite.sql.SqlNumericLiteral;
 import org.apache.commons.lang3.tuple.Pair;
-import pl.tkowalcz.tcph.Database;
+import pl.tkowalcz.tpch.Database;
 
 /**
  * CREATE TABLE orders  (

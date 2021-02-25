@@ -1,17 +1,14 @@
-package pl.tkowalcz.tcph.datamodel;
+package pl.tkowalcz.tpch.datamodel;
 
 //import org.apache.calcite.sql.SqlBasicCall;
 //import org.apache.calcite.sql.SqlCharStringLiteral;
 //import org.apache.calcite.sql.SqlNumericLiteral;
 import org.apache.commons.lang3.tuple.Pair;
-import pl.tkowalcz.tcph.Database;
-import pl.tkowalcz.tcph.Identifiable;
+import pl.tkowalcz.tpch.Database;
+import pl.tkowalcz.tpch.Identifiable;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 
 /**
  * CREATE TABLE lineitem (

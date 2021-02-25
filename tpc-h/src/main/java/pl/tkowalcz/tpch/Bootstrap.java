@@ -1,11 +1,11 @@
-package pl.tkowalcz.tcph;
+package pl.tkowalcz.tpch;
 
 import com.google.common.collect.Iterables;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.QuoteMode;
 import org.apache.commons.lang3.tuple.Pair;
-import pl.tkowalcz.tcph.datamodel.*;
+import pl.tkowalcz.tpch.datamodel.*;
 
 import java.io.FileReader;
 import java.io.IOException;

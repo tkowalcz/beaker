@@ -1,7 +1,7 @@
-package pl.tkowalcz.tcph;
+package pl.tkowalcz.tpch;
 
 import org.apache.commons.lang3.tuple.Pair;
-import pl.tkowalcz.tcph.datamodel.*;
+import pl.tkowalcz.tpch.datamodel.*;
 
 import java.util.Map;
 

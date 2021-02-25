@@ -1,11 +1,9 @@
-package pl.tkowalcz.tcph;
+package pl.tkowalcz.tpch;
 
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.internal.functions.Functions;
 import org.agrona.collections.Int2ObjectHashMap;
-import pl.tkowalcz.tcph.datamodel.LineItem;
+import pl.tkowalcz.tpch.datamodel.LineItem;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
