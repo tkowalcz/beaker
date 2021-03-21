@@ -23,7 +23,7 @@ public abstract class VarIntEncoderTest {
     public void shouldEncodeOneByteValue() {
         // Given
         long value = 0x23;
-        byte[] buffer = new byte[10];
+        byte[] buffer = new byte[32];
 
         // When
         int offset = encoder.encode(buffer, 0, value);
@@ -37,7 +37,7 @@ public abstract class VarIntEncoderTest {
     public void shouldEncode8bitValue() {
         // Given
         long value = 0xFF;
-        byte[] buffer = new byte[10];
+        byte[] buffer = new byte[32];
 
         // When
         int offset = encoder.encode(buffer, 0, value);
@@ -51,7 +51,7 @@ public abstract class VarIntEncoderTest {
     public void shouldEncode16bitValue() {
         // Given
         long value = 0xAE_FF;
-        byte[] buffer = new byte[10];
+        byte[] buffer = new byte[32];
 
         // When
         int offset = encoder.encode(buffer, 0, value);
@@ -59,6 +59,90 @@ public abstract class VarIntEncoderTest {
         // Then
         buffer = Arrays.copyOfRange(buffer, 0, offset);
         assertThat(buffer).containsExactly(0xFF, 0xDD, 0x02);
+    }
+
+    @Test
+    public void shouldEncode24bitValue() {
+        // Given
+        long value = 0xAD_AE_FF;
+        byte[] buffer = new byte[32];
+
+        // When
+        int offset = encoder.encode(buffer, 0, value);
+
+        // Then
+        buffer = Arrays.copyOfRange(buffer, 0, offset);
+        assertThat(buffer).containsExactly(0xFF, 0xDD, 0xB6, 0x5);
+    }
+
+    @Test
+    public void shouldEncode32bitValue() {
+        // Given
+        long value = 0xFC_AD_AE_FFL;
+        byte[] buffer = new byte[32];
+
+        // When
+        int offset = encoder.encode(buffer, 0, value);
+
+        // Then
+        buffer = Arrays.copyOfRange(buffer, 0, offset);
+        assertThat(buffer).containsExactly(0xFF, 0xDD, 0xB6, 0xE5, 0xF);
+    }
+
+    @Test
+    public void shouldEncode40bitValue() {
+        // Given
+        long value = 0xDD_FC_AD_AE_FFL;
+        byte[] buffer = new byte[32];
+
+        // When
+        int offset = encoder.encode(buffer, 0, value);
+
+        // Then
+        buffer = Arrays.copyOfRange(buffer, 0, offset);
+        assertThat(buffer).containsExactly(0xFF, 0xDD, 0xB6, 0xE5, 0xDF, 0x1B);
+    }
+
+    @Test
+    public void shouldEncode48bitValue() {
+        // Given
+        long value = 0xAB_DD_FC_AD_AE_FFL;
+        byte[] buffer = new byte[32];
+
+        // When
+        int offset = encoder.encode(buffer, 0, value);
+
+        // Then
+        buffer = Arrays.copyOfRange(buffer, 0, offset);
+        assertThat(buffer).containsExactly(0xFF, 0xDD, 0xB6, 0xE5, 0xDF, 0xFB, 0x2A);
+    }
+
+    @Test
+    public void shouldEncode56bitValue() {
+        // Given
+        long value = 0xBA_AB_DD_FC_AD_AE_FFL;
+        byte[] buffer = new byte[32];
+
+        // When
+        int offset = encoder.encode(buffer, 0, value);
+
+        // Then
+        buffer = Arrays.copyOfRange(buffer, 0, offset);
+        assertThat(buffer).containsExactly(0xFF, 0xDD, 0xB6, 0xE5, 0xDF, 0xFB, 0xAA, 0x5D);
+    }
+
+    @Test
+    public void shouldEncode64bitValue() {
+        // Given
+        long value = 0xDC_BA_AB_DD_FC_AD_AE_FFL;
+        byte[] buffer = new byte[32];
+
+        // When
+        int offset = encoder.encode(buffer, 0, value);
+
+        // Then
+        buffer = Arrays.copyOfRange(buffer, 0, offset);
+        assertThat(buffer).containsExactly(0xFF, 0xDD, 0xB6, 0xE5, 0xDF, 0xFB, 0xAA, 0xDD, 0xDC, 0x01);
     }
 
     @Test

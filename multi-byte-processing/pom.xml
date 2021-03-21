@@ -3,6 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>pl.tkowalcz.beaker</groupId>
     <artifactId>multi-byte-processing</artifactId>
     <name>Beaker Labs - Multi Byte Processing</name>
@@ -16,8 +17,8 @@
     </scm>
 
     <properties>
-        <compiler.source.level>12</compiler.source.level>
-        <compiler.target.level>12</compiler.target.level>
+        <compiler.source.level>16</compiler.source.level>
+        <compiler.target.level>16</compiler.target.level>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -136,11 +137,11 @@
                     <useIncrementalCompilation>false</useIncrementalCompilation>
                     <source>${compiler.source.level}</source>
                     <target>${compiler.target.level}</target>
-                    <release>12</release>
-                    <!--                    <compilerArgs>-->
-                    <!--                        <arg>&#45;&#45;add-modules</arg>-->
-                    <!--                        <arg>jdk.incubator.vector</arg>-->
-                    <!--                    </compilerArgs>-->
+                    <release>16</release>
+                    <compilerArgs>
+                        <arg>--add-modules</arg>
+                        <arg>jdk.incubator.vector</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>

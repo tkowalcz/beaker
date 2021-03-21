@@ -1,15 +1,22 @@
 package pl.tkowalcz.varints;
 
+import jdk.incubator.vector.ByteVector;
+import jdk.incubator.vector.LongVector;
+import jdk.incubator.vector.VectorOperators;
 import org.agrona.SystemUtil;
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.profile.*;
-import org.openjdk.jmh.results.format.ResultFormatType;
+import org.openjdk.jmh.profile.DTraceAsmProfiler;
+import org.openjdk.jmh.profile.GCProfiler;
+import org.openjdk.jmh.profile.LinuxPerfAsmProfiler;
+import org.openjdk.jmh.profile.Profiler;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.*;
+import org.openjdk.jmh.runner.options.CommandLineOptionException;
+import org.openjdk.jmh.runner.options.CommandLineOptions;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -88,7 +95,13 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @State(Scope.Benchmark)
-@Fork(value = 1)
+@Fork(
+        value = 1,
+        jvmArgsPrepend = {
+                "-Djdk.incubator.vector.VECTOR_ACCESS_OOB_CHECK=0"
+//,                "-XX:+PrintCompilation"
+        }
+)
 public class VarIntsMicrobenchmark {
 
     private long[] values;
@@ -152,11 +165,12 @@ public class VarIntsMicrobenchmark {
         CommandLineOptions commandLineOptions = new CommandLineOptions(args);
         Options opt = new OptionsBuilder().parent(commandLineOptions)
                 .include(VarIntsMicrobenchmark.class.getSimpleName())
-                .warmupIterations(1)
-                .measurementIterations(1)
+                .jvmArgsAppend("--add-modules", "jdk.incubator.vector")
+                .warmupIterations(2)
+                .measurementIterations(2)
 //                .resultFormat(ResultFormatType.CSV)
 //                .addProfiler(profilerClass)
-//                .addProfiler(GCProfiler.class) // make sure there are no allocations
+                .addProfiler(GCProfiler.class) // make sure there are no allocations
                 .forks(1)
                 .build();
 
