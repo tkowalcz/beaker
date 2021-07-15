@@ -1,8 +1,5 @@
 package pl.tkowalcz.varints;
 
-import jdk.incubator.vector.ByteVector;
-import jdk.incubator.vector.LongVector;
-import jdk.incubator.vector.VectorOperators;
 import org.agrona.SystemUtil;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.profile.DTraceAsmProfiler;
@@ -98,6 +95,10 @@ import java.util.concurrent.TimeUnit;
 @Fork(
         value = 1,
         jvmArgsPrepend = {
+                "-XX:+UnlockExperimentalVMOptions",
+                "-XX:+EnableVectorSupport",
+                "-XX:+EnableVectorReboxing",
+                "-XX:+EnableVectorAggressiveReboxing",
                 "-Djdk.incubator.vector.VECTOR_ACCESS_OOB_CHECK=0"
 //,                "-XX:+PrintCompilation"
         }
@@ -156,6 +157,16 @@ public class VarIntsMicrobenchmark {
         return buffer;
     }
 
+    @Benchmark
+    public byte[] vectorized() {
+        int offset = 0;
+        for (int i = 0; i < values.length - 1; i++) {
+            offset = Vectorized128VarIntEncoder.encode(buffer, offset, values, i);
+        }
+
+        return buffer;
+    }
+
     public static void main(String[] args) throws RunnerException, CommandLineOptionException {
         Class<? extends Profiler> profilerClass = LinuxPerfAsmProfiler.class;
         if (SystemUtil.osName().toLowerCase().startsWith("mac os")) {
@@ -164,7 +175,7 @@ public class VarIntsMicrobenchmark {
 
         CommandLineOptions commandLineOptions = new CommandLineOptions(args);
         Options opt = new OptionsBuilder().parent(commandLineOptions)
-                .include(VarIntsMicrobenchmark.class.getSimpleName())
+                .include(VarIntsMicrobenchmark.class.getSimpleName() + ".vectorized")
                 .jvmArgsAppend("--add-modules", "jdk.incubator.vector")
                 .warmupIterations(2)
                 .measurementIterations(2)

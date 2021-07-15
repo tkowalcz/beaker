@@ -1,12 +1,10 @@
 package pl.tkowalcz.varints;
 
-import static org.testng.Assert.*;
-
-public class VectorizedVarIntEncoderTest extends VarIntEncoderTest {
+public class Vectorized128VarIntEncoderTest extends VarIntEncoderTest {
 
     @Override
     public VarIntEncoder createEncoder() {
-        return (buffer, offset, value) -> VectorizedVarIntEncoder.encode(
+        return (buffer, offset, value) -> Vectorized128VarIntEncoder.encode(
                 buffer,
                 offset,
                 new long[]{value, 0},

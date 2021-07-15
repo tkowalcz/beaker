@@ -2,7 +2,7 @@ package pl.tkowalcz.sort;
 
 import jdk.incubator.vector.*;
 
-public class VectorBitonicSort {
+public class SingleVectorBitonicSort {
 
     static final VectorSpecies<Integer> SPECIES_I256 = VectorSpecies.of(int.class, VectorShape.S_256_BIT);
 

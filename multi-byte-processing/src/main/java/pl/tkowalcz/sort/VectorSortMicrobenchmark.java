@@ -23,13 +23,13 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @State(Scope.Benchmark)
 @Fork(value = 1, jvmArgsPrepend = {
-        "-XX:+UnlockDiagnosticVMOptions",
+//        "-XX:+UnlockDiagnosticVMOptions",
 //        "-XX:+LogVMOutput",
 //        "-XX:CompileCommand=print,*.bitonicSort",
-        "-XX:PrintAssemblyOptions=intel",
+//        "-XX:PrintAssemblyOptions=intel",
 //        "-XX:+UnlockExperimentalVMOptions",
 //        "-XX:+UseEpsilonGC",
-        "-XX:+UseVectorApiIntrinsics",
+//        "-XX:+UseVectorApiIntrinsics",
         "-Djdk.incubator.vector.VECTOR_ACCESS_OOB_CHECK=0"
 }
 )
@@ -64,8 +64,8 @@ public class VectorSortMicrobenchmark {
 
     @Benchmark
     public void bitonicSort() {
-        IntVector input = IntVector.fromArray(VectorBitonicSort.SPECIES_I256, inputArray, 0);
-        IntVector sorted = VectorBitonicSort.sort(input);
+        IntVector input = IntVector.fromArray(SingleVectorBitonicSort.SPECIES_I256, inputArray, 0);
+        IntVector sorted = SingleVectorBitonicSort.sort(input);
 
         sorted.intoArray(dataArray, 0);
     }
