@@ -1,7 +1,6 @@
 package pl.tkowalcz.sort;
 
 import jdk.incubator.vector.IntVector;
-import jdk.incubator.vector.VectorShuffle;
 import org.testng.annotations.Test;
 
 import static org.apache.commons.lang3.ArrayUtils.addAll;
@@ -18,9 +17,10 @@ public class DoubleVectorBitonicSortTest {
 
         IntVector input1 = IntVector.fromArray(SingleVectorBitonicSort.SPECIES_I256, inputArray1, 0);
         IntVector input2 = IntVector.fromArray(SingleVectorBitonicSort.SPECIES_I256, inputArray2, 0);
+        IntVector[] actual = new IntVector[2];
 
         // When
-        IntVector[] actual = DoubleVectorBitonicSort.sort(input1, input2);
+        DoubleVectorBitonicSort.sort(input1, input2, actual);
 
         // Then
         assertThat(actual).hasSize(2);

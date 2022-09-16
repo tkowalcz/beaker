@@ -17,7 +17,7 @@ public class DoubleVectorBitonicSort {
     private static final VectorShuffle<Integer> SHUFFLE_3 = SPECIES_I256.shuffleFromArray(new int[]{1, 0, 3, 2, 5, 4, 7, 6}, 0);
     private static final VectorMask<Integer> MASK_3 = SPECIES_I256.loadMask(new boolean[]{false, true, false, true, false, true, false, true}, 0);
 
-    public static IntVector[] sort(IntVector input1, IntVector input2) {
+    public static void sort(IntVector input1, IntVector input2, IntVector[] output) {
         input1 = SingleVectorBitonicSort.sort(input1);
         input2 = SingleVectorBitonicSort.sort(input2);
 
@@ -76,6 +76,7 @@ public class DoubleVectorBitonicSort {
             input2 = min.blend(max, MASK_3);
         }
 
-        return new IntVector[]{input1, input2};
+        output[0] = input1;
+        output[1] = input2;
     }
 }
