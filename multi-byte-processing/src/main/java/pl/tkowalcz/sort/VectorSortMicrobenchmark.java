@@ -1,12 +1,11 @@
 package pl.tkowalcz.sort;
 
 import jdk.incubator.vector.IntVector;
+import jdk.incubator.vector.Vector;
+import jdk.incubator.vector.VectorOperators;
 import org.agrona.SystemUtil;
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.profile.DTraceAsmProfiler;
-import org.openjdk.jmh.profile.GCProfiler;
-import org.openjdk.jmh.profile.LinuxPerfNormProfiler;
-import org.openjdk.jmh.profile.Profiler;
+import org.openjdk.jmh.profile.*;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -23,12 +22,13 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @State(Scope.Benchmark)
 @Fork(value = 1, jvmArgsPrepend = {
-//        "-XX:+UnlockDiagnosticVMOptions",
-//        "-XX:+LogVMOutput",
-//        "-XX:CompileCommand=print,*.bitonicSort",
-//        "-XX:PrintAssemblyOptions=intel",
-//        "-XX:+UnlockExperimentalVMOptions",
-//        "-XX:+UseEpsilonGC",
+        "-XX:+UnlockDiagnosticVMOptions",
+        "-XX:+LogVMOutput",
+        "-XX:CompileCommand=print,*.bitonicSort",
+        "-XX:PrintAssemblyOptions=intel",
+        "-XX:+UnlockExperimentalVMOptions",
+        "-XX:+AlwaysPreTouch",
+        "-XX:+UseEpsilonGC",
 //        "-XX:+UseVectorApiIntrinsics",
         "-Djdk.incubator.vector.VECTOR_ACCESS_OOB_CHECK=0"
 }
@@ -46,7 +46,7 @@ public class VectorSortMicrobenchmark {
         dataArray = new int[inputArray.length];
     }
 
-    @Benchmark
+//    @Benchmark
     public int[] arraySort() {
         System.arraycopy(inputArray, 0, dataArray, 0, inputArray.length);
 
@@ -54,11 +54,12 @@ public class VectorSortMicrobenchmark {
         return dataArray;
     }
 
-    @Benchmark
+//    @Benchmark
     public void bubbleSort() {
         IntVector input = IntVector.fromArray(VectorBubbleSort.SPECIES_I256, inputArray, 0);
         IntVector sorted = bubbleSort.sort(input);
 
+        Vector<Integer> v1 = IntVector.SPECIES_PREFERRED.broadcast(1);
         sorted.intoArray(dataArray, 0);
     }
 
@@ -71,7 +72,7 @@ public class VectorSortMicrobenchmark {
     }
 
     public static void main(String[] args) throws RunnerException {
-        Class<? extends Profiler> profilerClass = LinuxPerfNormProfiler.class;
+        Class<? extends Profiler> profilerClass = LinuxPerfProfiler.class;
         if (SystemUtil.osName().toLowerCase().startsWith("mac os")) {
             profilerClass = DTraceAsmProfiler.class;
         }
@@ -81,8 +82,9 @@ public class VectorSortMicrobenchmark {
                 .warmupIterations(2)
                 .measurementIterations(2)
                 .resultFormat(ResultFormatType.CSV)
-                .addProfiler(GCProfiler.class)
-//                .addProfiler(profilerClass)
+//                .addProfiler(GCProfiler.class)
+                .jvmArgsAppend("--add-modules", "jdk.incubator.vector")
+                .addProfiler(profilerClass)
                 .threads(1)
                 .forks(1)
                 .build();

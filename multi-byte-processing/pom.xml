@@ -17,8 +17,8 @@
     </scm>
 
     <properties>
-        <compiler.source.level>20</compiler.source.level>
-        <compiler.target.level>20</compiler.target.level>
+        <compiler.source.level>21</compiler.source.level>
+        <compiler.target.level>21</compiler.target.level>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -61,7 +61,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.11</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
