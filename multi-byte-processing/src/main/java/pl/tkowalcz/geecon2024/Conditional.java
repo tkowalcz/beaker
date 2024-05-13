@@ -1,13 +1,15 @@
 package pl.tkowalcz.geecon2024;
 
 import jdk.incubator.vector.IntVector;
+import jdk.incubator.vector.VectorMask;
+import jdk.incubator.vector.VectorOperators;
 import jdk.incubator.vector.VectorSpecies;
 
 public class Conditional {
 
     public static final VectorSpecies<Integer> SPECIES = IntVector.SPECIES_PREFERRED;
 
-    public int selectWhere(int[] sales) {
+    public static int selectWhere(int[] sales) {
         int count = 0;
         for (int i = 0; i < sales.length; i++) {
             if (sales[i] > 0) {
@@ -18,16 +20,24 @@ public class Conditional {
         return count;
     }
 
-    public int selectWhereVectorised(int[] sales) {
-        IntVector result = IntVector.zero(SPECIES);
+    public static int selectWhereVectorised(int[] sales) {
+        int count = 0;
 
-        int loopBound = SPECIES.loopBound(result.length());
-        for (int i = 0; i < loopBound; i += SPECIES.length()) {
+        int i = 0;
+        int loopBound = SPECIES.loopBound(sales.length);
+        for (; i < loopBound; i += SPECIES.length()) {
             IntVector data = IntVector.fromArray(SPECIES, sales, i);
 
-
+            VectorMask<Integer> comparisonResult = data.compare(VectorOperators.GT, 0);
+            count += comparisonResult.trueCount();
         }
 
-        return 0;
+        for (; i < sales.length; i++) {
+            if (sales[i] > 0) {
+                count++;
+            }
+        }
+
+        return count;
     }
 }

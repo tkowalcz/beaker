@@ -99,6 +99,15 @@ public class Microbenchmark {
         float[] result = new float[arraySize];
         for (int i = 0; i < arraySize; i++) {
             result[i] = ThreadLocalRandom.current().nextFloat();
+         }
+
+        return result;
+    }
+
+    public static int[] intArray(int arraySize) {
+        int[] result = new int[arraySize];
+        for (int i = 0; i < arraySize; i++) {
+            result[i] = ThreadLocalRandom.current().nextInt(100);
         }
 
         return result;
