@@ -1,11 +1,10 @@
 package pl.tkowalcz;
 
+import org.agrona.BufferUtil;
 import org.agrona.SystemUtil;
+import org.agrona.concurrent.UnsafeBuffer;
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.profile.DTraceAsmProfiler;
-import org.openjdk.jmh.profile.LinuxPerfNormProfiler;
-import org.openjdk.jmh.profile.LinuxPerfProfiler;
-import org.openjdk.jmh.profile.Profiler;
+import org.openjdk.jmh.profile.*;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -13,6 +12,7 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -20,15 +20,23 @@ import java.util.stream.Stream;
 @BenchmarkMode(Mode.SampleTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-@Fork(value = 1)
+@Fork(value = 1, jvmArgsPrepend = {
+//        "--add-opens java.base/sun.nio.ch=ALL-UNNAMED",
+        "-Dagrona.disable.bounds.checks=true",
+        "-XX:+UnlockDiagnosticVMOptions",
+//        "-XX:+PrintCompilation",
+//        "-XX:CompileCommand=print,*.sumChristmasShoppingSpend"
+}
+)
 public class CacheLineDetect {
 
-    private static final int ELEMENTS_COUNT = 1024 * 1024;
+    private static final int ELEMENTS_COUNT = 10 * 1024 * 1024;
 
-    private ByteBuffer clientsDataRowOrder;
+    private UnsafeBuffer clientsDataRowOrder;
 
-    @Param({"4", "8", "16", "32", "48", "64", "80", "96", "112", "128", "144", "160", "176", "192", "208", "224", "240", "256"})
+    @Param({"4", "8", "16", "32", "48", "64", "80", "96", "112", "128", "160", "192", "224", "256", "288", "320", "352", "384", "416"})
     private int rowSizeBytes;
+    private int index;
 
     @Setup
     public void setUp() {
@@ -36,27 +44,30 @@ public class CacheLineDetect {
                 .limit(ELEMENTS_COUNT)
                 .toArray(Client[]::new);
 
-        clientsDataRowOrder = ByteBuffer.allocate(rowSizeBytes * ELEMENTS_COUNT);
+        clientsDataRowOrder = new UnsafeBuffer(ByteBuffer.allocateDirect(rowSizeBytes * ELEMENTS_COUNT).order(ByteOrder.nativeOrder()));
 
+        index = 0;
         for (Client client : clients) {
-            client.encode(clientsDataRowOrder);
+            index = client.encode(clientsDataRowOrder, index);
         }
-
-        clientsDataRowOrder.flip();
     }
 
     @Benchmark
-    public long sumChristmasShoppingSpend() {
-        long result = 0;
-        for (int i = 0; i < clientsDataRowOrder.remaining(); i += rowSizeBytes) {
-            result += clientsDataRowOrder.getInt(i);
+    public int sumChristmasShoppingSpend() {
+        UnsafeBuffer buffer = this.clientsDataRowOrder;
+        int limit = this.index;
+        int stride = this.rowSizeBytes;
+
+        int result = 0;
+        for (int i = 0; i < limit; i += stride) {
+            result += buffer.getInt(i);
         }
 
         return result;
     }
 
     public static void main(String[] args) throws RunnerException {
-        Class<? extends Profiler> profilerClass = LinuxPerfProfiler.class;
+        Class<? extends Profiler> profilerClass = LinuxPerfNormProfiler.class;
         if (SystemUtil.osName().toLowerCase().startsWith("mac os")) {
             profilerClass = DTraceAsmProfiler.class;
         }
@@ -66,7 +77,7 @@ public class CacheLineDetect {
                 .warmupIterations(2)
                 .measurementIterations(2)
                 .resultFormat(ResultFormatType.CSV)
-//                .addProfiler(profilerClass)
+                .addProfiler(profilerClass)
                 .build();
 
         new Runner(opt).run();
@@ -86,9 +97,14 @@ public class CacheLineDetect {
             moreBusinessCriticalData = new byte[rowWidthBytes];
         }
 
-        public void encode(ByteBuffer buffer) {
-            buffer.putInt(christmasShoppingSpend);
-            buffer.put(moreBusinessCriticalData);
+        public int encode(UnsafeBuffer buffer, int index) {
+            buffer.putInt(index, christmasShoppingSpend);
+            index += Integer.BYTES;
+
+            buffer.putBytes(index, moreBusinessCriticalData);
+            index += moreBusinessCriticalData.length;
+
+            return index;
         }
     }
 }

@@ -65,7 +65,7 @@ public class SelectMicrobenchmark {
         return result;
     }
 
-    //    @Benchmark
+    @Benchmark
     public long selectWhereVector() {
         long result = 0;
 
@@ -78,7 +78,7 @@ public class SelectMicrobenchmark {
         return result;
     }
 
-    @Benchmark
+    //    @Benchmark
     public long selectWhereVector2() {
         IntVector result = IntVector.zero(species);
 
@@ -104,7 +104,7 @@ public class SelectMicrobenchmark {
                 .measurementIterations(2)
                 .resultFormat(ResultFormatType.CSV)
                 .jvmArgsAppend("--add-modules", "jdk.incubator.vector")
-                .addProfiler(profilerClass)
+//                .addProfiler(profilerClass)
 //                .addProfiler(JavaFlightRecorderProfiler.class)
 //                .threads(3)
                 .forks(1)

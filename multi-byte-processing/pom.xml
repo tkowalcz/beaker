@@ -17,8 +17,8 @@
     </scm>
 
     <properties>
-        <compiler.source.level>19</compiler.source.level>
-        <compiler.target.level>19</compiler.target.level>
+        <compiler.source.level>21</compiler.source.level>
+        <compiler.target.level>21</compiler.target.level>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.agrona</groupId>
             <artifactId>agrona</artifactId>
-            <version>0.9.6</version>
+            <version>1.20.0</version>
         </dependency>
         <dependency>
             <groupId>net.mintern</groupId>
@@ -170,7 +170,7 @@
                     <useIncrementalCompilation>false</useIncrementalCompilation>
                     <source>${compiler.source.level}</source>
                     <target>${compiler.target.level}</target>
-                    <release>19</release>
+                    <release>21</release>
                     <compilerArgs>
                         <arg>--add-modules</arg>
                         <arg>jdk.incubator.vector</arg>
