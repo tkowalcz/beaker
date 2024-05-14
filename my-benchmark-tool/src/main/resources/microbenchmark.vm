@@ -50,6 +50,12 @@ public class ${simpleClazz} extends Microbenchmark {
 #end
 
     public static void main(String[] args) throws RunnerException {
-        run(${simpleClazz}.class.getSimpleName());
+    #if($useGcProfiler)
+        runWithGc(${simpleClazz}.class.getName());
+    #elseif($usePerfProfiler)
+        runWithPerf(${simpleClazz}.class.getName());
+    #else
+        run(${simpleClazz}.class.getName());
+    #end
     }
 }

@@ -72,6 +72,14 @@ public class Microbenchmark {
         runWith(benchmarkName, LinuxPerfNormProfiler.class, "");
     }
 
+    public static void runWithPerf(String benchmarkName) throws RunnerException {
+        runWith(benchmarkName, LinuxPerfProfiler.class, "");
+    }
+
+    public static void runWithGc(String benchmarkName) throws RunnerException {
+        runWith(benchmarkName, GCProfiler.class, "");
+    }
+
     public static void runWithJFR(String benchmarkName) throws RunnerException {
         runWith(benchmarkName, JavaFlightRecorderProfiler.class, "");
     }
