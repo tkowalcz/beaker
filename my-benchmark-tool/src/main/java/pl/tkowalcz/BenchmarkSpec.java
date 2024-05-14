@@ -1,11 +1,11 @@
 package pl.tkowalcz;
 
+import javax.lang.model.element.VariableElement;
+import java.util.List;
+
 public record BenchmarkSpec(
-        String packageName,
-        String clazz,
-        String simpleClazz,
-        String name,
         String methodName,
+        List<? extends VariableElement> parameters,
         String[] argumentNames
 ) {
 }

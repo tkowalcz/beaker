@@ -1,4 +1,4 @@
-package pl.tkowalcz.geecon2024;
+package pl.tkowalcz.geecon2024.done;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
@@ -6,6 +6,8 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.profile.GCProfiler;
 import org.openjdk.jmh.runner.RunnerException;
+import pl.tkowalcz.geecon2024.Conditional;
+import pl.tkowalcz.geecon2024.Microbenchmark;
 
 public class ConditionalMicrobenchmark extends Microbenchmark {
 
@@ -17,13 +19,13 @@ public class ConditionalMicrobenchmark extends Microbenchmark {
 
         @Setup
         public void setUp() {
-            sales = intArray(TEST_ARRAY_SIZE);
+            sales = randomArrayOfInt(TEST_ARRAY_SIZE);
         }
     }
 
     @Benchmark
     public float selectWhere(Data data) {
-        return Conditional.selectWhere(data.sales);
+        return pl.tkowalcz.geecon2024.Conditional.selectWhere(data.sales);
     }
 
     @Benchmark

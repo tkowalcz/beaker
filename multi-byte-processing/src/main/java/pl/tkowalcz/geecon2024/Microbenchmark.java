@@ -90,7 +90,7 @@ public class Microbenchmark {
                 "libPath=/root/libasyncProfiler.so;output=flamegraph;dir=profile-results");
     }
 
-    public static double[] randomArray(int arraySize) {
+    public static double[] randomArrayOfDouble(int arraySize) {
         return IntStream.range(0, arraySize)
                 .mapToDouble(value -> (double) value)
                 .toArray();
@@ -103,7 +103,7 @@ public class Microbenchmark {
                 .toArray();
     }
 
-    public static float[] floatArray(int arraySize) {
+    public static float[] randomArrayOfFloat(int arraySize) {
         float[] result = new float[arraySize];
         for (int i = 0; i < arraySize; i++) {
             result[i] = ThreadLocalRandom.current().nextFloat();
@@ -112,7 +112,7 @@ public class Microbenchmark {
         return result;
     }
 
-    public static int[] intArray(int arraySize) {
+    public static int[] randomArrayOfInt(int arraySize) {
         int[] result = new int[arraySize];
         for (int i = 0; i < arraySize; i++) {
             result[i] = ThreadLocalRandom.current().nextInt(100);
@@ -121,6 +121,14 @@ public class Microbenchmark {
         return result;
     }
 
+    public static long[] randomArrayOfLong(int arraySize) {
+        long[] result = new long[arraySize];
+        for (int i = 0; i < arraySize; i++) {
+            result[i] = ThreadLocalRandom.current().nextLong(100);
+        }
+
+        return result;
+    }
     public static double[] arrayOf(int arraySize, double valueToSet) {
         return IntStream.range(0, arraySize)
                 .mapToDouble(meh -> valueToSet)

@@ -3,7 +3,6 @@ package pl.tkowalcz.geecon2024;
 import jdk.incubator.vector.FloatVector;
 import jdk.incubator.vector.VectorOperators;
 import jdk.incubator.vector.VectorSpecies;
-import org.openjdk.jmh.runner.RunnerException;
 
 public class CosineSimilarity {
 

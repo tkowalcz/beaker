@@ -4,11 +4,8 @@ import jdk.incubator.vector.IntVector;
 import jdk.incubator.vector.VectorMask;
 import jdk.incubator.vector.VectorOperators;
 import jdk.incubator.vector.VectorSpecies;
-import pl.tkowalcz.GcProfiler;
 import pl.tkowalcz.MyBenchmark;
-import pl.tkowalcz.PerfProfiler;
 
-@GcProfiler
 public class Conditional {
 
     public static final VectorSpecies<Integer> SPECIES = IntVector.SPECIES_PREFERRED;

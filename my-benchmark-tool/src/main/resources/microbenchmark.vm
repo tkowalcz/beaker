@@ -7,55 +7,42 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.runner.RunnerException;
 import pl.tkowalcz.geecon2024.Microbenchmark;
 
-public class ${simpleClazz} extends Microbenchmark {
+public class ${benchmarkClass} extends Microbenchmark {
 
     private static final int TEST_ARRAY_SIZE = 1000_0000;
 
     @State(Scope.Benchmark)
     public static class Data {
-        private int[] sales;
-
-        private double[] input1;
-        private double[] input2;
-
-        private float[] f1;
-        private float[] f2;
-
-        private float[] result;
+        #foreach($field in $fields)
+            private $field.type() $field.name();
+        #end
 
         @Setup
         public void setUp() {
-            sales = intArray(TEST_ARRAY_SIZE);
-
-            input1 = randomArray(TEST_ARRAY_SIZE);
-            input2 = randomArray(TEST_ARRAY_SIZE);
-
-            result = new float[TEST_ARRAY_SIZE];
-
-            f1 = floatArray(TEST_ARRAY_SIZE);
-            f2 = floatArray(TEST_ARRAY_SIZE);
+        #foreach($field in $fields)
+            $field.name() = randomArrayOf$field.type2()(TEST_ARRAY_SIZE);
+        #end
         }
     }
 
 #foreach($benchmark in $benchmarks)
     @Benchmark
-    public float ${benchmark.name()}(Data data) {
-        return ${benchmark.clazz()}.${benchmark.methodName()}(
+    public float ${benchmark.methodName()}(Data data) {
+        return ${clazz}.${benchmark.methodName()}(
     #foreach($argument in $benchmark.argumentNames())
         data.$argument #if($foreach.hasNext),#end
     #end
 );
     }
-
 #end
 
     public static void main(String[] args) throws RunnerException {
     #if($useGcProfiler)
-        runWithGc(${simpleClazz}.class.getName());
+        runWithGc(${benchmarkClass}.class.getName());
     #elseif($usePerfProfiler)
-        runWithPerf(${simpleClazz}.class.getName());
+        runWithPerf(${benchmarkClass}.class.getName());
     #else
-        run(${simpleClazz}.class.getName());
+        run(${benchmarkClass}.class.getName());
     #end
     }
 }

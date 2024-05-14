@@ -1,4 +1,4 @@
-package pl.tkowalcz.geecon2024;
+package pl.tkowalcz.geecon2024.done;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
@@ -6,6 +6,8 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.profile.GCProfiler;
 import org.openjdk.jmh.runner.RunnerException;
+import pl.tkowalcz.geecon2024.CosineSimilarity;
+import pl.tkowalcz.geecon2024.Microbenchmark;
 
 public class CosineSimilarityMicrobenchmark extends Microbenchmark {
 
@@ -18,14 +20,14 @@ public class CosineSimilarityMicrobenchmark extends Microbenchmark {
 
         @Setup
         public void setUp() {
-            input1 = floatArray(TEST_ARRAY_SIZE);
-            input2 = floatArray(TEST_ARRAY_SIZE);
+            input1 = randomArrayOfFloat(TEST_ARRAY_SIZE);
+            input2 = randomArrayOfFloat(TEST_ARRAY_SIZE);
         }
     }
 
     @Benchmark
     public float cosineSimilarity(Data data) {
-        return CosineSimilarity.cosineSimilarity(data.input1, data.input2);
+        return pl.tkowalcz.geecon2024.CosineSimilarity.cosineSimilarity(data.input1, data.input2);
     }
 
     @Benchmark
