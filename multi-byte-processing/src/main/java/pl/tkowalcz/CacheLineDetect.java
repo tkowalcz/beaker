@@ -1,6 +1,5 @@
 package pl.tkowalcz;
 
-import org.agrona.BufferUtil;
 import org.agrona.SystemUtil;
 import org.agrona.concurrent.UnsafeBuffer;
 import org.openjdk.jmh.annotations.*;

@@ -1,19 +1,12 @@
 package pl.tkowalcz;
 
-import org.agrona.SystemUtil;
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.profile.DTraceAsmProfiler;
-import org.openjdk.jmh.profile.GCProfiler;
-import org.openjdk.jmh.profile.LinuxPerfAsmProfiler;
-import org.openjdk.jmh.profile.Profiler;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.CommandLineOptionException;
 import org.openjdk.jmh.runner.options.CommandLineOptions;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
-import pl.tkowalcz.varints.BlogPostVarIntEncoder;
-import pl.tkowalcz.varints.VarIntsMicrobenchmark;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;

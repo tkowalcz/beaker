@@ -5,7 +5,6 @@ import org.agrona.SystemUtil;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.profile.DTraceAsmProfiler;
 import org.openjdk.jmh.profile.LinuxPerfAsmProfiler;
-import org.openjdk.jmh.profile.LinuxPerfNormProfiler;
 import org.openjdk.jmh.profile.Profiler;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;

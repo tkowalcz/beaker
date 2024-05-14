@@ -1,7 +1,9 @@
 package pl.tkowalcz.geecon2024.done;
 
 import jdk.incubator.vector.DoubleVector;
+import jdk.incubator.vector.VectorMask;
 import jdk.incubator.vector.VectorSpecies;
+import pl.tkowalcz.MyBenchmark;
 import pl.tkowalcz.geecon2024.Microbenchmark;
 
 import java.util.Arrays;
@@ -22,18 +24,19 @@ public class HelloVectors {
         System.out.println("doubleVector = " + doubleVector);
     }
 
-    public static void add(double[] array1, double[] array2, double[] result) {
-        int loopBound = SPECIES.loopBound(array1.length);
+    public static void add(double[] input1, double[] input2, double[] result) {
+        int loopBound = SPECIES.loopBound(input1.length);
         int i = 0;
         for (; i < loopBound; i += SPECIES.length()) {
-            DoubleVector doubleVector1 = DoubleVector.fromArray(SPECIES, array1, i);
-            DoubleVector doubleVector2 = DoubleVector.fromArray(SPECIES, array2, i);
+            VectorMask<Double> mask = SPECIES.indexInRange(i, input1.length);
+            DoubleVector doubleVector1 = DoubleVector.fromArray(SPECIES, input1, i, mask);
+            DoubleVector doubleVector2 = DoubleVector.fromArray(SPECIES, input2, i, mask);
 
             doubleVector1.add(doubleVector2).intoArray(result, i);
         }
 
-        for (; i < array1.length; i++) {
-            result[i] = array1[i] + array2[i];
+        for (; i < input1.length; i++) {
+            result[i] = input1[i] + input2[i];
         }
     }
 
