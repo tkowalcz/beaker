@@ -3,11 +3,13 @@ package pl.tkowalcz.geecon2024;
 import jdk.incubator.vector.FloatVector;
 import jdk.incubator.vector.VectorOperators;
 import jdk.incubator.vector.VectorSpecies;
+import pl.tkowalcz.MyBenchmark;
 
 public class CosineSimilarity {
 
     private static final VectorSpecies<Float> SPECIES = FloatVector.SPECIES_PREFERRED;
 
+    @MyBenchmark
     public static float cosineSimilarity(float[] a, float[] b) {
         float numerator = 0.0f;
         float denominatorA = 0.0f;
@@ -23,6 +25,7 @@ public class CosineSimilarity {
         return (float) (numerator / (Math.sqrt(denominatorA * denominatorB)));
     }
 
+    @MyBenchmark
     public static float cosineSimilarityWithVectors(float[] a, float[] b) {
         FloatVector numerator = FloatVector.zero(SPECIES);
         FloatVector denominatorA = FloatVector.zero(SPECIES);

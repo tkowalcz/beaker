@@ -1,27 +1,27 @@
 package pl.tkowalcz.geecon2024;
 
-import jdk.incubator.vector.DoubleVector;
+import jdk.incubator.vector.FloatVector;
 import jdk.incubator.vector.VectorSpecies;
+import pl.tkowalcz.MyBenchmark;
+import pl.tkowalcz.PerfAsmProfiler;
 
-import static pl.tkowalcz.geecon2024.Microbenchmark.arrayOf;
-
+@PerfAsmProfiler
 public class HelloVectors {
 
-    private static final VectorSpecies<Double> SPECIES = DoubleVector.SPECIES_PREFERRED;
+    private static final VectorSpecies<Float> SPECIES = FloatVector.SPECIES_PREFERRED;
 
-    private static final int TEST_ARRAY_SIZE = 1025;
+    @MyBenchmark
+    public static float hello(float[] floats) {
+        FloatVector vector = FloatVector.fromArray(SPECIES, floats, 0);
 
-    public static void hello(double[] input1) {
+//        System.out.println("SPECIES = " + SPECIES);
+//        System.out.println("vector = " + vector);
 
+        return vector.lane(0);
     }
 
     public static void main(String[] args) {
-        double[] array1 = arrayOf(TEST_ARRAY_SIZE, 1.0);
-        double[] array2 = arrayOf(TEST_ARRAY_SIZE, 2.0);
-        double[] result = new double[array1.length];
-
-        hello(array1);
-//        add(array1, array2, result);
-//        System.out.println(Arrays.toString(result));
+        float[] floats = Microbenchmark.randomArrayOfFloat(1024);
+        hello(floats);
     }
 }

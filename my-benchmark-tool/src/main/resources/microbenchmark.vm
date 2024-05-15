@@ -41,6 +41,8 @@ public class ${benchmarkClass} extends Microbenchmark {
         runWithGc(${benchmarkClass}.class.getName());
     #elseif($usePerfProfiler)
         runWithPerf(${benchmarkClass}.class.getName());
+    #elseif($usePerfAsmProfiler)
+        runWithPerfAsm(${benchmarkClass}.class.getName());
     #else
         run(${benchmarkClass}.class.getName());
     #end

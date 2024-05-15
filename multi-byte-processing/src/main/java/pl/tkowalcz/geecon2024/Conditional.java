@@ -4,13 +4,14 @@ import jdk.incubator.vector.IntVector;
 import jdk.incubator.vector.VectorMask;
 import jdk.incubator.vector.VectorOperators;
 import jdk.incubator.vector.VectorSpecies;
+import pl.tkowalcz.GcProfiler;
 import pl.tkowalcz.MyBenchmark;
 
+@GcProfiler
 public class Conditional {
 
     public static final VectorSpecies<Integer> SPECIES = IntVector.SPECIES_PREFERRED;
 
-    @MyBenchmark
     public static int selectWhere(int[] sales) {
         int count = 0;
         for (int i = 0; i < sales.length; i++) {
@@ -22,7 +23,6 @@ public class Conditional {
         return count;
     }
 
-    @MyBenchmark
     public static int selectWhereVectorised(int[] sales) {
         int count = 0;
 

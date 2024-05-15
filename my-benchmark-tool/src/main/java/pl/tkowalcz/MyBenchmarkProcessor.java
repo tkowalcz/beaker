@@ -77,6 +77,7 @@ public class MyBenchmarkProcessor extends AbstractProcessor {
 
         context.put("useGcProfiler", classSpec.useGcProfiler());
         context.put("usePerfProfiler", classSpec.usePerfProfiler());
+        context.put("usePerfAsmProfiler", classSpec.usePerfAsmProfiler());
 
         StringWriter writer = new StringWriter();
         benchmarkTemplate.merge(context, writer);
