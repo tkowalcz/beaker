@@ -23,6 +23,8 @@ import java.util.stream.IntStream;
                 "-XX:+EnableVectorSupport",
                 "-XX:+EnableVectorReboxing",
                 "-XX:+EnableVectorAggressiveReboxing",
+                "-XX:+UnlockDiagnosticVMOptions",
+                "-XX:+DebugNonSafepoints",
                 "-Djdk.incubator.vector.VECTOR_ACCESS_OOB_CHECK=0"
         }
 )
